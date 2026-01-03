@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squibbe App UI - Friends & Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #cbd5e1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background-color: #F0F4F8; 
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 8px solid #2d2d2d;
+        }
+
+        .uniform-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .bottom-sheet {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            background: #F0F4F8;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            z-index: 50;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+        .bottom-sheet.active {
+            bottom: 0;
+        }
+
+        .toggle-checkbox:checked { right: 0; border-color: #22c4c4; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #22c4c4; }
+        .toggle-label { width: 40px; height: 24px; background-color: #e5e7eb; border-radius: 9999px; position: relative; cursor: pointer; transition: background-color 0.2s ease-in; }
+        .toggle-circle { width: 20px; height: 20px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.2s ease-in; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        input:checked + .toggle-label .toggle-circle { transform: translateX(16px); }
+
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        
+        <div class="px-6 pt-6 pb-4 flex justify-between items-center bg-[#F0F4F8] z-20">
+            <div>
+                <h1 class="text-2xl font-extrabold text-gray-800 leading-none">Barátok</h1>
+                <span class="text-xs font-semibold text-gray-400 mt-0.5">Közös célok, közös sikerek</span>
+            </div>
+            
+            <button class="w-10 h-10 rounded-full bg-white text-[#22c4c4] shadow-sm flex items-center justify-center hover:bg-teal-50 transition border border-teal-100">
+                <i class="fas fa-user-plus"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto no-scrollbar pb-36 px-5 space-y-4">
+            
+            <div onclick="openFriendProfile('GymBro Tomi', '#8821', 'https://i.pravatar.cc/150?img=11')" class="bg-white rounded-2xl p-4 uniform-shadow flex items-center justify-between cursor-pointer active:scale-[0.98] transition hover:shadow-md border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full border-2 border-[#22c4c4] p-0.5 bg-white relative">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="User" class="w-full h-full object-cover rounded-full">
+                        <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-400 border-2 border-white rounded-full"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-lg font-bold text-gray-800">GymBro Tomi</span> 
+                            <span class="text-[11px] text-gray-400 font-mono tracking-tighter">#8821</span>
+                        </div>
+                        <span class="text-xs font-semibold text-gray-400">Ma: <span class="text-[#22c4c4]">2100 kcal</span> bevitel</span>
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300">
+                    <i class="fas fa-chevron-right text-sm"></i>
+                </div>
+            </div>
+
+            <div onclick="openFriendProfile('Kovács Eszter', '#9923', 'https://i.pravatar.cc/150?img=5')" class="bg-white rounded-2xl p-4 uniform-shadow flex items-center justify-between cursor-pointer active:scale-[0.98] transition hover:shadow-md border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full border-2 border-[#FF6363] p-0.5 bg-white relative">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="User" class="w-full h-full object-cover rounded-full">
+                        <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-gray-300 border-2 border-white rounded-full"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-lg font-bold text-gray-800">Kovács Eszter</span>
+                            <span class="text-[11px] text-gray-400 font-mono tracking-tighter">#9923</span>
+                        </div>
+                        <span class="text-xs font-semibold text-gray-400">Utoljára aktív: 2 órája</span>
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300">
+                    <i class="fas fa-chevron-right text-sm"></i>
+                </div>
+            </div>
+
+            <div onclick="openFriendProfile('Nagy Péter', '#1102', '/image.png')" class="bg-white rounded-2xl p-4 uniform-shadow flex items-center justify-between cursor-pointer active:scale-[0.98] transition hover:shadow-md border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full border-2 border-gray-200 p-0.5 bg-white relative">
+                        <img src="/image.png" alt="User" class="w-full h-full object-cover rounded-full opacity-80">
+                        <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-400 border-2 border-white rounded-full"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-lg font-bold text-gray-800">Nagy Péter</span>
+                            <span class="text-[11px] text-gray-400 font-mono tracking-tighter">#1102</span>
+                        </div>
+                        <span class="text-xs font-semibold text-gray-400">Ma: <span class="text-[#22c4c4]">Pihenőnap</span></span>
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300">
+                    <i class="fas fa-chevron-right text-sm"></i>
+                </div>
+            </div>
+
+             <div onclick="openFriendProfile('Varga Lilla', '#4455', '/image.png')" class="bg-white rounded-2xl p-4 uniform-shadow flex items-center justify-between cursor-pointer active:scale-[0.98] transition hover:shadow-md border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full border-2 border-[#1BA8A8] p-0.5 bg-white relative">
+                        <img src="/image.png" alt="User" class="w-full h-full object-cover rounded-full opacity-80">
+                        <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-gray-300 border-2 border-white rounded-full"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-lg font-bold text-gray-800">Varga Lilla</span>
+                            <span class="text-[11px] text-gray-400 font-mono tracking-tighter">#4455</span>
+                        </div>
+                        <span class="text-xs font-semibold text-gray-400">Ma: <span class="text-[#22c4c4]">1550 kcal</span> bevitel</span>
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300">
+                    <i class="fas fa-chevron-right text-sm"></i>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 pl-2">Jelölések</h3>
+                <div class="bg-white/60 rounded-2xl p-4 border border-gray-100 flex items-center justify-between">
+                     <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                            <img src="https://i.pravatar.cc/150?img=3" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <span class="text-sm font-bold text-gray-600 block leading-tight">Kiss Bence</span>
+                            <span class="text-[10px] text-gray-400 font-mono">#3391</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="w-8 h-8 rounded-full bg-white border border-red-200 text-[#FF6363] flex items-center justify-center shadow-sm"><i class="fas fa-times text-xs"></i></button>
+                        <button class="w-8 h-8 rounded-full bg-[#22c4c4] text-white flex items-center justify-center shadow-sm"><i class="fas fa-check text-xs"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="absolute bottom-0 w-full bg-white h-[80px] px-6 pb-4 flex justify-between items-end border-t border-gray-100 shadow-[0_-5px_25px_rgba(0,0,0,0.03)] z-30 rounded-b-[32px]">
+            <div class="flex flex-col items-center gap-1 text-gray-300 hover:text-gray-500 w-12 cursor-pointer transition">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-[10px] font-bold">Home</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 text-gray-300 hover:text-gray-500 w-12 cursor-pointer transition">
+                <i class="fas fa-book-open text-lg"></i>
+                <span class="text-[10px] font-bold">Receptek</span>
+            </div>
+            <div class="w-16"></div>
+            <div class="absolute left-1/2 -translate-x-1/2 -top-8">
+                <div class="w-14 h-24 bg-white rounded-full border-4 border-white shadow-xl overflow-hidden flex flex-col group transition-all">
+                    <div class="flex-1 bg-gradient-to-b from-[#22c4c4] to-[#1BA8A8] flex items-center justify-center text-white cursor-pointer transition-all duration-300 hover:flex-[3]">
+                        <i class="fas fa-plus text-lg drop-shadow-md"></i>
+                    </div>
+                    <div class="h-[1px] bg-white/30 w-full relative z-10"></div>
+                    <div class="flex-1 bg-gradient-to-b from-[#FF6363] to-[#FF7D6E] flex items-center justify-center text-white cursor-pointer transition-all duration-300 hover:flex-[3]">
+                        <i class="fas fa-minus text-lg drop-shadow-md"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-center gap-1 text-gray-300 hover:text-gray-500 w-12 cursor-pointer transition">
+                <i class="fas fa-chart-bar text-lg"></i>
+                <span class="text-[10px] font-bold">Stat</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 text-[#1BA8A8] w-12 cursor-pointer">
+                <i class="fas fa-user-friends text-lg"></i>
+                <span class="text-[10px] font-bold">Barátok</span>
+            </div>
+        </div>
+
+        <div id="overlay" class="overlay" onclick="closeProfile()"></div>
+        <div id="friendSheet" class="bottom-sheet pb-8">
+            <div class="w-full flex justify-center pt-3 pb-1" onclick="closeProfile()">
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+            </div>
+
+            <div class="overflow-y-auto no-scrollbar px-6 pt-2">
+                
+                <div class="flex flex-col items-center mb-6">
+                    <div class="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden mb-3">
+                        <img id="profileImage" src="" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex items-baseline gap-2">
+                        <h2 id="profileName" class="text-2xl font-extrabold text-gray-800"></h2>
+                        <span id="profileId" class="text-sm font-mono text-gray-400 font-bold"></span>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-400">Squibbe tag 2023 óta</span>
+                </div>
+
+                <div class="bg-gradient-to-br from-[#22c4c4] to-[#1BA8A8] rounded-2xl p-4 text-white uniform-shadow mb-6 relative overflow-hidden">
+                    <h3 class="font-bold text-sm mb-3 opacity-90">Mai állapota</h3>
+                    <div class="flex items-center gap-4">
+                        <div class="relative w-16 h-16 flex items-center justify-center rounded-full bg-white/20 shadow-inner">
+                            <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                                <path class="text-white/20" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+                                <path class="text-white drop-shadow-md" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                            </svg>
+                            <span class="absolute text-[10px] font-bold">75%</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span>Bevitel</span>
+                                <span>1850 kcal</span>
+                            </div>
+                            <div class="w-full bg-black/20 rounded-full h-1.5 mb-2">
+                                <div class="bg-white h-1.5 rounded-full" style="width: 75%"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] opacity-80">
+                                <span>Elégetett: 450 kcal</span>
+                                <i class="fas fa-fire"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <button class="bg-white p-4 rounded-2xl uniform-shadow border-2 border-[#22c4c4] flex flex-col items-center justify-center gap-2 group active:scale-[0.98] transition">
+                        <div class="w-10 h-10 rounded-full bg-teal-50 text-[#1BA8A8] flex items-center justify-center group-hover:bg-[#1BA8A8] group-hover:text-white transition">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-600">Kalória felvitel</span>
+                    </button>
+                    
+                    <button class="bg-white p-4 rounded-2xl uniform-shadow border-2 border-[#FF6363] flex flex-col items-center justify-center gap-2 group active:scale-[0.98] transition">
+                        <div class="w-10 h-10 rounded-full bg-red-50 text-[#FF6363] flex items-center justify-center group-hover:bg-[#FF6363] group-hover:text-white transition">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-600">Edzés felvitel</span>
+                    </button>
+                </div>
+
+                <div class="rounded-2xl bg-gradient-to-br from-[#22c4c4] to-[#FF6363] p-[2px] uniform-shadow mb-6 group active:scale-[0.98] transition">
+                    <button class="bg-white w-full h-full rounded-[14px] py-4 flex items-center justify-center gap-3">
+                         <i class="fas fa-book-open text-gray-600 group-hover:text-[#22c4c4] transition"></i>
+                         <span class="font-bold text-gray-700">Receptjei</span>
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 uniform-shadow border border-gray-100 mb-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-shield-alt text-[#1BA8A8]"></i>
+                        <h3 class="font-bold text-gray-700">Hozzáférési engedélyek</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-gray-600">Online státusz</span>
+                                <span class="text-[10px] text-gray-400">Láthatja mikor vagy aktív</span>
+                            </div>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="hidden" checked>
+                                <div class="toggle-label"><div class="toggle-circle"></div></div>
+                            </label>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-gray-600">Feed megtekintése</span>
+                                <span class="text-[10px] text-gray-400">Láthatja mit ettél ma</span>
+                            </div>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="hidden" checked>
+                                <div class="toggle-label"><div class="toggle-circle"></div></div>
+                            </label>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-gray-600">Súly követése</span>
+                                <span class="text-[10px] text-gray-400">Láthatja a súlyváltozásod</span>
+                            </div>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="hidden">
+                                <div class="toggle-label"><div class="toggle-circle"></div></div>
+                            </label>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-gray-600">Kalória felvitel</span>
+                                <span class="text-[10px] text-gray-400">Írhat a naplódba</span>
+                            </div>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="hidden" checked>
+                                <div class="toggle-label"><div class="toggle-circle"></div></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="w-full py-3 rounded-xl border border-red-100 text-[#FF6363] font-bold text-sm bg-red-50 hover:bg-red-100 transition flex items-center justify-center gap-2 mb-20">
+                    <i class="fas fa-user-times"></i>
+                    Ismerős törlése
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function openFriendProfile(name, id, img) {
+            document.getElementById('profileName').innerText = name;
+            document.getElementById('profileId').innerText = id;
+            document.getElementById('profileImage').src = img;
+            
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById('friendSheet').classList.add('active');
+        }
+
+        function closeProfile() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('friendSheet').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
